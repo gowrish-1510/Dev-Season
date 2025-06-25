@@ -53,8 +53,19 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-      <ToastContainer position="bottom-right" autoClose={5000} pauseOnHover theme="light" />
-      <div className="w-full max-w-md bg-white/5 backdrop-blur-md border border-white/10 rounded-xl shadow-2xl p-6">
+            <div 
+        className="absolute inset-0 bg-cover bg-center z-0"
+        style={{ 
+          backgroundImage: `linear-gradient(
+            to bottom right,
+            rgba(15, 23, 42, 0.6),
+            rgba(88, 28, 120, 0.7),
+            rgba(15, 23, 42, 0.7)
+          ), url('/code_bg.jpg')`
+        }}
+      ></div>
+      <ToastContainer position="top-right" autoClose={5000} pauseOnHover theme="light" />
+      <div className="w-full max-w-md bg-white/5 backdrop-blur-md border border-white/10 rounded-xl shadow-2xl p-6 hover:shadow-cyan-100/50">
         <h2 className="text-3xl font-bold text-white text-center mb-4">Create an Account</h2>
         <p className="text-gray-400 text-center mb-6">Join Online Judge and start solving problems!</p>
 
@@ -66,7 +77,7 @@ const Register = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="w-full px-4 py-2.5 bg-white/5 border border-white/20 rounded-md text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2.5 bg-white/5 border border-white/20 rounded-md text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
               placeholder="Your name"
             />
           </div>
@@ -78,7 +89,7 @@ const Register = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-2.5 bg-white/5 border border-white/20 rounded-md text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2.5 bg-white/5 border border-white/20 rounded-md text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
               placeholder="you@example.com"
             />
           </div>
@@ -91,7 +102,7 @@ const Register = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-2.5 bg-white/5 border border-white/20 rounded-md text-white placeholder:text-gray-400 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-4 py-2.5 bg-white/5 border border-white/20 rounded-md text-white placeholder:text-gray-400 pr-10 focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 placeholder="Password"
               />
               <button
@@ -111,7 +122,7 @@ const Register = () => {
               value={confPassword}
               onChange={(e) => setConfPassword(e.target.value)}
               required
-              className="w-full px-4 py-2.5 bg-white/5 border border-white/20 rounded-md text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2.5 bg-white/5 border border-white/20 rounded-md text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
               placeholder="Confirm password"
             />
           </div>

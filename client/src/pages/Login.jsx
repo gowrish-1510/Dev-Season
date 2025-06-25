@@ -66,8 +66,20 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+    
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 z-10 flex items-center justify-center p-4 b">
       {/* Background pattern */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center z-0"
+        style={{ 
+          backgroundImage: `linear-gradient(
+            to bottom right,
+            rgba(15, 23, 42, 0.6),
+            rgba(88, 28, 120, 0.7),
+            rgba(15, 23, 42, 0.7)
+          ), url('/code_bg.jpg')`
+        }}
+      ></div>
 
       <ToastContainer
         position="top-right"
@@ -80,7 +92,7 @@ const Login = () => {
         theme="light"
         transition={Bounce}
        />
-      
+
       <div className="relative z-10 w-full max-w-md">
         {/* Header with logo */}
         <div className="text-center mb-8">
@@ -91,7 +103,7 @@ const Login = () => {
         </div>
 
         {/* Login Card */}
-        <div className="bg-white/5 backdrop-blur-sm border border-white/10 shadow-2xl rounded-lg p-6">
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl rounded-lg p-6 hover:shadow-cyan-100/50 ">
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-white mb-2">Sign In</h2>
             <p className="text-gray-400 text-sm">
