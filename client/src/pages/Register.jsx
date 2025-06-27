@@ -65,9 +65,9 @@ const Register = () => {
         }}
       ></div>
       <ToastContainer position="top-right" autoClose={5000} pauseOnHover theme="light" />
-      <div className="w-full max-w-md bg-white/5 backdrop-blur-md border border-white/10 rounded-xl shadow-2xl p-6 hover:shadow-cyan-100/50">
+      <div className="w-full max-w-md bg-white/5 backdrop-blur-md border border-white/10 rounded-xl shadow-2xl p-6 hover:shadow-cyan-100/90">
         <h2 className="text-3xl font-bold text-white text-center mb-4">Create an Account</h2>
-        <p className="text-gray-400 text-center mb-6">Join Online Judge and start solving problems!</p>
+        <p className="text-gray-400 text-center mb-6">Join <span className="text-xl p-0 text-cyan-400 hover:shadow-lg hover:shadow-blue-400">CodeJudge</span> and start solving problems!</p>
 
         <form onSubmit={handleRegister} className="space-y-4">
           <div>

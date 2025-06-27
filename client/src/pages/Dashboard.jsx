@@ -1,12 +1,12 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const Dashboard= ()=>{
-   const {userid}= useParams();
+  const {user}= useAuth();
 
     return(
         <>
-        This is Dashboard Page of user {userid}!
+        This is Dashboard Page of user {user.username}!
         </>
     )
 }

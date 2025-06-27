@@ -3,6 +3,7 @@ import passport from 'passport';
 import session from 'express-session';
 import connectToMongoDB from './src/db/connectToMongoDB.js';
 import auth_router from './src/controllers/authController.js';
+import problem_router from './src/controllers/problemController.js';
 import cors from 'cors'
 
 const app= express();
@@ -30,6 +31,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(auth_router);
+app.use(problem_router);
 
 app.listen(8000,()=>{
     console.log("Server running on port 8000");

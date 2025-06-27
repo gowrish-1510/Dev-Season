@@ -3,7 +3,7 @@ import passport from "passport"
 import LocalStrategy from "passport-local"
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt"
-import UserAuthenticated from "../middlewares/auth_middleware.js";
+import {UserAuthenticated} from "../middlewares/auth_middleware.js";
 
 const auth_router = express.Router();
 
@@ -35,7 +35,7 @@ passport.serializeUser((user, cb) => {
 
 passport.deserializeUser(async function (id, cb) {
     try {
-        const user = await User.findById(id);
+        const user = await User.findById(id).select("username email role");
         cb(null, user);
     } catch (err) {
         cb(err);
@@ -79,24 +79,24 @@ auth_router.post("/logout", function (req, res) {
 auth_router.post("/register", async (req, res) => {
     try {
         const { username, email, password } = req.body;
-        const username_exist= await User.findOne({username: username});
 
-        if(username_exist){
-            res.json({user:null,message:"Username already exists!"})
+        const username_exist = await User.findOne({ username });
+        if (username_exist) {
+            return res.json({ user: null, message: "Username already exists!" });
         }
 
-        const email_exists= await User.findOne({email:email});
-
-        if(email_exists){
-          res.json({user:null,message:"Email already registered! Please Sign In"})  
+        const email_exists = await User.findOne({ email });
+        if (email_exists) {
+            return res.json({ user: null, message: "Email already registered! Please Sign In" });
         }
 
         const hashedpass = await bcrypt.hash(password, 10);
 
         const user = new User({
-            username: username,
-            email: email,
-            passwordHash: hashedpass
+            username,
+            email,
+            passwordHash: hashedpass,
+            role: "user" 
         });
 
         await user.save();
@@ -104,8 +104,10 @@ auth_router.post("/register", async (req, res) => {
     }
 
     catch (err) {
-        res.json({ user: null });
+        console.error(err);
+        res.status(500).json({ user: null, message: "Registration failed" });
     }
 });
+
 
 export default auth_router;

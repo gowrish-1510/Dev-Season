@@ -99,11 +99,11 @@ const Login = () => {
           <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             Welcome Back
           </h1>
-          <p className="text-gray-400">Sign in to your Online Judge account</p>
+          <p className="text-gray-400">Sign in to your <span className="text-xl p-0 text-cyan-400 hover:shadow-lg hover:shadow-blue-400">CodeJudge</span> account</p>
         </div>
 
         {/* Login Card */}
-        <div className="bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl rounded-lg p-6 hover:shadow-cyan-100/50 ">
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl rounded-lg p-6 hover:shadow-cyan-100/90 ">
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-white mb-2">Sign In</h2>
             <p className="text-gray-400 text-sm">
