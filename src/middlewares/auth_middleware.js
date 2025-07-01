@@ -9,9 +9,6 @@ export const UserAuthenticated= (req,res,next)=>{
 }
 
 export const AdminOnly= (req,res,next)=>{
-        console.log("AdminOnly middleware called");
-    console.log("User authenticated:", req.isAuthenticated());
-    console.log("User role:", req.user?.role);
     if(req.isAuthenticated() && req.user.role==='admin'){
         return next();
     }

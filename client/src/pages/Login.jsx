@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Code, Eye, EyeOff } from "lucide-react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import { NavLink } from "react-router-dom";
@@ -38,7 +37,7 @@ const Login = () => {
       });
        
       setTimeout(() => {
-        navigate(`/dashboard/${userid}`);
+        navigate(`/dashboard/`);
       }, 2000);
   
 
@@ -70,7 +69,7 @@ const Login = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 z-10 flex items-center justify-center p-4 b">
       {/* Background pattern */}
       <div 
-        className="absolute inset-0 bg-cover bg-center z-0"
+        className="fixed inset-0 bg-cover bg-center z-0"
         style={{ 
           backgroundImage: `linear-gradient(
             to bottom right,
@@ -96,7 +95,7 @@ const Login = () => {
       <div className="relative z-10 w-full max-w-md">
         {/* Header with logo */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-cyan-300 to-amber-400 bg-clip-text text-transparent">
             Welcome Back
           </h1>
           <p className="text-gray-400">Sign in to your <span className="text-xl p-0 text-cyan-400 hover:shadow-lg hover:shadow-blue-400">CodeJudge</span> account</p>

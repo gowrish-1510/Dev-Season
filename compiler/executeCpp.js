@@ -1,5 +1,4 @@
 import {exec} from 'child_process';
-import { error } from 'console';
 import fs, { existsSync } from 'fs'
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -14,13 +13,13 @@ if(!existsSync(outputPath)){
 }
 
 
-const cppExecute= (filepath)=>{
+const cppExecute= (filepath,inputstringPath)=>{
     const jobid= path.basename(filepath).split(".")[0];
     const outpath= path.join(outputPath,`${jobid}.exe`);
 
     return new Promise((resolve,reject)=>{
         exec(
-            `g++ ${filepath} -o ${outpath} && cd ${outputPath} && ${jobid}`,(error,stdout,stderr)=>{
+            `g++ ${filepath} -o ${outpath} && cd ${outputPath} && ${jobid} < ${inputstringPath}`,(error,stdout,stderr)=>{
                 if(error){
                     reject({error,stderr});
                 }

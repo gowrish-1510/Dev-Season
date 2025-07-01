@@ -10,7 +10,7 @@ dotenv.config();
 
 const problem_router = Router();
 
-const s3 = new S3Client({
+export const s3 = new S3Client({
    region: process.env.AWS_REGION,
    credentials: {
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -81,6 +81,51 @@ problem_router.post("/problem/create", UserAuthenticated, async (req, res) => {
    }
 });
 
+//route for fetching contributors of problems in descending order
+problem_router.get("/problem/contributors", async (req, res) => {
+   try {
+      const result = await Problem.aggregate([
+         {
+            $group: {
+               _id: '$author',
+               problemCount: { $sum: 1 },   //cont no of occurances 
+            },
+         },
+         {
+            $sort: { problemCount: -1 },  //sort no of user occurances in descending order
+         },
+
+         {
+            $lookup: {             //fetches users from the users collection
+               from: 'users',
+               foreignField: '_id',
+               localField: '_id',
+               as: 'contributors',
+            }
+         },
+
+         {
+            $unwind: '$contributors',         //rename the array for returning
+         },
+
+         {
+            $project: {                        //return with required fields
+               _id: 0,
+               userId: '$contributors._id',
+               username: '$contributors.username',
+               problemCount: 1
+            },
+         },
+
+      ]);
+
+      return res.status(200).json({success:true,contributors: result});
+   }catch(err){
+     console.error("Error occured :",err);
+     return res.status(500).json({success:false,message:"Error fetching contributors!"})
+   }
+});
+
 //route for listing all problems
 problem_router.get("/problem/all", async (req, res) => {
    try {
@@ -99,7 +144,7 @@ problem_router.get("/problem/all", async (req, res) => {
 problem_router.get("/problem/unapproved", AdminOnly, async (req, res) => {
    try {
       const problems = await Problem.find({ isApproved: false });
-      if (problems.length==0) {
+      if (problems.length == 0) {
          return res.status(404).json({ success: false, message: "No unapproved problems!" });
       }
 
@@ -122,8 +167,8 @@ problem_router.get("/problem/:id", async (req, res) => {
       for (var i = 0; i < problem.testCases.length; i++) {
          const { inputFileKey, outputFileKey } = problem.testCases[i];
 
-         const inputString = getStreamAsString(s3, process.env.AWS_BUCKET_NAME, inputFileKey);
-         const outputString = getStreamAsString(s3, process.env.AWS_BUCKET_NAME, outputFileKey);
+         const inputString = await getStreamAsString(s3, process.env.AWS_BUCKET_NAME, inputFileKey);
+         const outputString = await getStreamAsString(s3, process.env.AWS_BUCKET_NAME, outputFileKey);
 
          testCasesWithContent.push({
             input: inputString,

@@ -9,19 +9,19 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
 app.post("/run",async (req,res)=>{
-    const {code, language='cpp'}= req.body;
+    const {code, language='cpp',input=""}= req.body;
     if(code === undefined){
         return res.json({success:false,message:"Empty code! Can't be executed"});
     }
 
-    const filepath= createFile(language,code);
+    const {filepath,inputstringPath}= createFile(language,code,input);
     try{
-        const op= await cppExecute(filepath);
+        const op= await cppExecute(filepath,inputstringPath);
         res.json({success:true,output:op})
     }
     catch(err){
         console.error(err)
-        res.json({success:false,output:err});
+        res.json({success:false,error:err.message});
     }
 })
 

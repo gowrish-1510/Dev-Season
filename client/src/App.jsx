@@ -4,6 +4,8 @@ import Dashboard from './pages/Dashboard.jsx'
 import Register from './pages/Register.jsx'
 import Practice from './pages/Practice.jsx'
 import Navbar from './components/navbar.jsx'
+import Problem from './pages/Problem.jsx'
+import ProblemSubmission from './pages/ProblemSubmission.jsx'
 import { Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext.jsx'
 
@@ -17,7 +19,8 @@ function App() {
     <Route path='/login' element={<Login />}/>
     <Route path='/register' element={<Register />}/>
     <Route path='/dashboard' element={<Dashboard />}/>
-    <Route path='/practice' element={<Practice />}/>
+    <Route path='/problems' element={<Problem />}/>
+    <Route path='/problems/submission' element={<ProblemSubmission />} />
   </Routes> 
   </AuthProvider>  
   )

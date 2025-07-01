@@ -54,7 +54,7 @@ const Register = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
             <div 
-        className="absolute inset-0 bg-cover bg-center z-0"
+        className="fixed inset-0 bg-cover bg-center z-0"
         style={{ 
           backgroundImage: `linear-gradient(
             to bottom right,
