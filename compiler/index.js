@@ -17,11 +17,11 @@ app.post("/run",async (req,res)=>{
     const {filepath,inputstringPath}= createFile(language,code,input);
     try{
         const op= await cppExecute(filepath,inputstringPath);
-        res.json({success:true,output:op})
+        res.json({success:true,output:{stdout: op.stdout, executionTime: op.estTime}})
     }
     catch(err){
         console.error(err)
-        res.json({success:false,error:err.message});
+        res.json({success:false,error: err.stderr || "Unknown error during execution!"});
     }
 })
 

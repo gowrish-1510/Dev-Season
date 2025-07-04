@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { type } from "os";
 
 const problemSchema = new mongoose.Schema({
     title: {
@@ -42,6 +43,11 @@ const problemSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+
+    maxExecTime: {
+        type: Number,
+        default: 1000,
+    }
 
 }, { timestamps: true });
 

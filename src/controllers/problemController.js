@@ -181,6 +181,7 @@ problem_router.get("/problem/:id", async (req, res) => {
       res.status(201).json({ success: true, problem: problem, sampleTestCases: testCasesWithContent });
    }
    catch (err) {
+      console.error("Some error: ",err);
       res.status(500).json({ success: false, message: "Error fetching problem with id" });
    }
 });
