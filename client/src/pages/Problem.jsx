@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Search,ArrowLeft, ArrowRight } from "lucide-react";
+import { Search,ArrowLeft, ArrowRight,Trash2 } from "lucide-react";
 import SelectDiff from "../components/SelectDiff.jsx";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const Problem = () => {
+  
+  const { isAuthenticated, user }= useAuth();
 
   const categories = ["All", "Dynamic Programming", "Array", "Graphs", "Stack", "Queue", "String", "Linked List"];
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -75,6 +78,35 @@ const Problem = () => {
     })
 
     return Math.ceil(filteredProblems.length / problemsPerPage);
+  }
+
+  const deleteProblem= async (id)=>{  //
+     try{
+
+       const outcome= await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/problem/delete/${id}`,
+        {withCredentials:true});
+
+        if(outcome.data.success){
+          toast.success(outcome.data.message,{
+            theme:"dark",
+            transition:Bounce,
+          });
+
+          setProblems((prev) => (prev.filter((problem)=> problem._id !== id)));
+          setDisplayProblems((prev) => prev.filter((problem) => problem._id !== id));
+        }else{
+          toast.error(outcome.data.message,{
+            theme:"dark",
+            transition:Bounce, 
+          });
+        }
+     }catch(err){
+       console.error("Some error from server side: ",err);
+          toast.error("Failed to delete Problem",{
+            theme:"dark",
+            transition:Bounce, 
+          });   
+     }
   }
 
   const getDifficultyColor = (difficulty) => {
@@ -164,12 +196,23 @@ const Problem = () => {
                   <span className="text-purple-400 text-sm font-medium rounded-3xl border px-2 py-1 text-center">{problem.category}</span>
                 </div>
               </div>
-              <div className="ml-4">
+              <div className="ml-4 flex gap-2.5">
                 <Link to={`/problems/${problem._id}`}>
                   <button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold py-2 px-6 rounded-md shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition-all duration-300 transform hover:scale-[1.02]">
                     Solve
                   </button>
                 </Link>
+                {isAuthenticated && user.role==='admin'?   //if user is admin then only he can see the delete button
+                  <div className="flex justify-center items-center">
+                  <button
+                    type="button"
+                    className="px-6 py-2 text-white bg-red-600 hover:bg-red-700 rounded-md transition-colors duration-200 transform hover:scale-[1.02]"
+                    onClick={()=> deleteProblem(problem._id)}
+                  >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                  </div>
+                   : <></>}
               </div>
             </div>
 

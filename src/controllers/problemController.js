@@ -1,5 +1,5 @@
 import Problem from "../models/problemModel.js";
-import { S3Client, PutObjectCommand, DeleteObjectCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, DeleteObjectsCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
 import dotenv from "dotenv";
 import { Router, text } from "express";
 import { UserAuthenticated, AdminOnly } from "../middlewares/auth_middleware.js";
@@ -226,7 +226,7 @@ problem_router.delete("/problem/delete/:id", AdminOnly, async (req, res) => {
          return res.json({ success: true, message: "Problem deleted. No files found in S3." });
       }
 
-      const deleteCommand = new DeleteObjectCommand({
+      const deleteCommand = new DeleteObjectsCommand({
          Bucket: process.env.AWS_BUCKET_NAME,
          Delete: {
             Objects: listedObjects.Contents.map(obj => ({ Key: obj.Key })),

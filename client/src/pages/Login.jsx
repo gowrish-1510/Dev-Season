@@ -38,7 +38,7 @@ const Login = () => {
        
       setTimeout(() => {
         navigate(`/dashboard/`);
-      }, 2000);
+      }, 3000);
   
 
     }
@@ -82,12 +82,12 @@ const Login = () => {
 
       <ToastContainer
         position="top-right"
-        autoClose={5000}
+        autoClose={2000}
         hideProgressBar={false}
         rtl={false}
         pauseOnFocusLoss
         draggable
-        pauseOnHover
+        pauseOnHover={false}
         theme="light"
         transition={Bounce}
        />
