@@ -192,7 +192,7 @@ const ProblemSolve = () => {
     return <div>Loading...</div>
 
   return (
-    <ProblemContext.Provider value={{ problem, testCases, code, setCode, isRunning, clickRun, submit,language,setLanguage }}>
+    <ProblemContext.Provider value={{ problem, testCases, code, setCode, isRunning,setIsRunning, clickRun, submit,language,setLanguage }}>
       <ToastContainer position="top-right" autoClose={5000} pauseOnHover />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4 pt-8 min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to bg-slate-900">
         <div
