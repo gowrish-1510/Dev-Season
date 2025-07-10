@@ -6,6 +6,7 @@ import Problem from "../models/problemModel.js";
 import { getStreamAsString } from "../utils/s3Utils.js";
 import Submission from "../models/submissionModel.js";
 import axios from "axios";
+import User from "../models/userModel.js";
 
 const submission_router = Router();
 dotenv.config();
@@ -90,10 +91,16 @@ submission_router.post("/problem/:id/run", UserAuthenticated, async (req, res) =
             return res.status(404).json({ success: false, message: "Problem not found" });
         }
 
+        let newcode=code;
+        if(problem.boilerplates && problem.boilerplates.get(language)){  //if boilerplate is present, then append it to user function
+          newcode = problem.boilerplates.get(language) + "\n" + code;
+        }
+
+
         const results = [];
 
         try {
-            await runtestCases(problem, code, language, 2, results);
+            await runtestCases(problem, newcode, language, 2, results);
         } catch (err) {
             console.error("Error in compilation: ", err);
             return res.status(200).json({ success: false, message: "Execution failed", results });
@@ -122,7 +129,6 @@ submission_router.post("/problem/:id/run", UserAuthenticated, async (req, res) =
 submission_router.post("/problem/:id/custom",UserAuthenticated, async (req,res)=>{
    const {code,language,input}= req.body;
    const problemid= req.params.id;
-   console.log("Input recieved is :",input);
 
 const lines = input.trim().split('\n').map(line => line.trim());
   if (lines.length < 2) {
@@ -142,9 +148,14 @@ const numbers = lines[1].split(/\s+/).map(Number);   //validation for number of 
 
    try{
    const problem= await Problem.findById(problemid);
+     let newcode= code;
+
+    if(problem.boilerplates && problem.boilerplates.get(language)){
+          newcode = problem.boilerplates.get(language) + "\n" + code;
+        }
 
    const op= await axios.post(`${process.env.COMPILER_BACKEND_URL}/run`,{
-    code,language,input
+    newcode,language,input
    });
 
    if(op.data.success){
@@ -174,6 +185,11 @@ submission_router.post("/problem/:id/submit", UserAuthenticated, async (req, res
             return res.status(404).json({ success: false, message: "Problem not found" });
         }
 
+        let newcode= code;
+        if(problem.boilerplates && problem.boilerplates.get(language)){  //if boilerplate is present, then append it to user function
+          newcode = problem.boilerplates.get(language) + "\n" + code;
+        }
+
         const results = [];
 
         const submission = new Submission({
@@ -184,7 +200,7 @@ submission_router.post("/problem/:id/submit", UserAuthenticated, async (req, res
         });
 
         try {
-            await runtestCases(problem, code, language, problem.testCases.length, results);
+            await runtestCases(problem, newcode, language, problem.testCases.length, results);
         } catch (err) {
             console.error("Error in compilation: ", err);
             submission.verdict = 'Attempted';
@@ -212,6 +228,19 @@ submission_router.post("/problem/:id/submit", UserAuthenticated, async (req, res
         submission.verdict = 'Accepted';
         submission.executionTime= maxRuntime;
         await submission.save();
+
+        const user= await User.findById(req.user._id);
+
+        const found= user.solvedProblems.find(problemid => problemid.problem.toString()===problem._id.toString());
+
+        if(found === undefined){
+            user.solvedProblems.push({
+             problem: problem._id,
+             solvedAt: Date.now()
+             });
+            await user.save();
+        }
+        
         return res.status(200).json({ success: true, results });
     } catch (err) {
         console.error("Error during code submit:", err.message);

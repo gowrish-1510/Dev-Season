@@ -27,7 +27,9 @@ problem_router.post("/problem/create", UserAuthenticated, async (req, res) => {
          description,
          difficulty,
          category,
-         testcases
+         testcases,
+         boilerplates,
+         displayFunctions,
       } = req.body;
 
       const problemSlug = slugify(title); //to remove and trim unnecessary characters
@@ -67,7 +69,9 @@ problem_router.post("/problem/create", UserAuthenticated, async (req, res) => {
          category: category,
          isApproved: false,
          author: author,
-         testCases: testcaseEntries
+         testCases: testcaseEntries,
+         boilerplates: boilerplates || {},  //it will be present for data structure problems
+         displayFunctions: displayFunctions || {}, //it will be present for data structure problems
       });
 
       await problem.save();

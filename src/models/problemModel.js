@@ -47,7 +47,19 @@ const problemSchema = new mongoose.Schema({
     maxExecTime: {
         type: Number,
         default: 1000,
-    }
+    },
+
+    boilerplates: {
+    type: Map,
+    of: String,
+    default: {},
+    },
+
+   displayFunctions: {
+    type: Map,
+    of: String,
+    default: {},
+    },
 
 }, { timestamps: true });
 

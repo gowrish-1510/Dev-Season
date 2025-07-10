@@ -30,14 +30,11 @@ const userSchema = new mongoose.Schema({
     },
 
     solvedProblems: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Problem'
+       problem:{ type: mongoose.Schema.Types.ObjectId,
+        ref: 'Problem'},
+       solvedAt:{type: Date, default: Date.now}
     }],
 
-    submissions: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Submission'
-    }],
 
     contestsParticipated: [{
         contestId: { type: mongoose.Schema.Types.ObjectId, ref: 'Contest' },

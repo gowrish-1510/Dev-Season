@@ -25,13 +25,7 @@ export default function Navbar() {
   const handleLogout = async () => {
     try {
       await logoutUser();
-      toast.success("Successfully Logged Out! Redirecting to Home..", {
-        theme: "light",
-        transition: Bounce,
-      });
-      setTimeout(() => {
-        navigate("/");
-      }, 3000);
+      navigate("/login");
     } catch (err) {
       console.error("Error while logout!: ", err);
     }

@@ -15,7 +15,10 @@ import axios from "axios";
 Modal.setAppElement("#root");
 
 const CodeEditor = () => {
-  const cppBoilerPlate = `#include<bits/stdc++.h>
+
+  const { code, setCode, isRunning, clickRun, submit, language, setLanguage, problem, setIsRunning } = useProblem();
+
+  const cppBoilerPlate = (problem?.displayFunctions?.["cpp"]) || `#include<bits/stdc++.h>
     using namespace std;
     int main(){
 
@@ -23,7 +26,7 @@ const CodeEditor = () => {
     return 0;
    }`;
 
-  const pythonBoilerPlate = `print("Hello World!")
+  const pythonBoilerPlate = (problem?.displayFunctions?.["python"]) ||  `print("Hello World!")
    ##Write your code here`;
 
   const languages = [
@@ -31,7 +34,6 @@ const CodeEditor = () => {
     { value: "python", label: "Python", prismLang: "python" }
   ];
 
-  const { code, setCode, isRunning, clickRun, submit, language, setLanguage, problem, setIsRunning } = useProblem();
   const [isHintOpen, setIsHintOpen] = useState(false);
   const [aiHintResult, setAiHintResult] = useState(null);
   const [loadingHint, setLoadingHint] = useState(false);
