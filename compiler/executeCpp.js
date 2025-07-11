@@ -14,20 +14,29 @@ if (!existsSync(outputPath)) {
 
 const cppExecute = (filepath, inputstringPath) => {
   const jobid = path.basename(filepath).split(".")[0];
-  const outpath = path.join(outputPath, `${jobid}.exe`);
+  const outpath = path.join(outputPath, `${jobid}.out`);
 
   return new Promise((resolve, reject) => {
     // compiling the C++ code
     exec(`g++ ${filepath} -o ${outpath}`, (compileError, compileStdout, compileStderr) => {
-      if (compileError || compileStderr) {
+      if (compileError) {
         return reject({ error: compileError, stderr: compileStderr });
       }
 
       // Execute the compiled program and measure execution time
+      fs.chmodSync(outpath, 0o755); 
       const start = performance.now();
-      exec(`cd ${outputPath} && ${jobid} < ${inputstringPath}`,{timeout:5000}, (execError, stdout, stderr) => {
+      exec(`${outpath} < ${inputstringPath}`,{timeout:5000}, (execError, stdout, stderr) => {
         const end = performance.now();
         const execTime = (end - start).toFixed(2);
+
+      try {
+          if (existsSync(outpath)) {
+            fs.unlinkSync(outpath); // Delete the .out file
+          }
+        } catch (cleanupError) {
+          console.error(`Failed to clean up ${outpath}:`, cleanupError);
+        }
 
         if (execError || stderr) {
           if(execError.killed){  //if code ran for a long time(>5000 ms) due to infinite loop or any other reason

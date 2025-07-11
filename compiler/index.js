@@ -1,8 +1,9 @@
-import { error } from 'console';
+
 import express from 'express'
 import { createFile } from './generateFile.js';
 import cppExecute from './executeCpp.js';
 import pythonExecute from './executePython.js';
+import fs from 'fs'
 
 const app= express();
 
@@ -31,6 +32,10 @@ app.post("/run",async (req,res)=>{
         default:
            op= await cppExecute(filepath,inputstringPath); 
         }
+
+        fs.unlinkSync(filepath);   //delete output file after use
+        fs.unlinkSync(inputstringPath);   //delete input file after use
+
         res.json({success:true,output:{stdout: op.stdout, executionTime: op.estTime}})
     }
     catch(err){
