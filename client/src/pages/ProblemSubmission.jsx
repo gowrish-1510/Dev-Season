@@ -12,7 +12,6 @@ const ProblemSubmission= ()=>{
     const navigate= useNavigate();
     const { isAuthenticated, loading }= useAuth();
 
-    console.log("status of isAutenticated:",isAuthenticated);
 
     const [newProblem,setNewProblem]= useState({
       title: "",
@@ -22,6 +21,8 @@ const ProblemSubmission= ()=>{
       testcases:[{input:"",output:""}]
     });
 
+    const [animationComplete, setAnimationComplete] = useState(false);
+
     const [contributors,setContributors]= useState([]);
 
     useEffect(() => {
@@ -30,6 +31,11 @@ const ProblemSubmission= ()=>{
         if (!isAuthenticated) {
             navigate("/login", { replace: true });
         }
+
+    const timer = setTimeout(() => {
+          setAnimationComplete(true);
+        }, 300);
+        return () => clearTimeout(timer);
     }, [isAuthenticated, loading, navigate]);
 
     useEffect(()=>{
@@ -136,7 +142,7 @@ const handleSubmit = async (e) => {
         }}
       ></div>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-4 py-10 flex flex-col lg:flex-row gap-8">
+      <div className={`relative z-10 max-w-4xl mx-auto px-4 py-10 flex flex-col lg:flex-row gap-8 transform transition-all duration-1000 ease-out ${animationComplete ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
         {/* Form for submission */}
         <div className="flex-1 bg-white/10 backdrop-blur-sm border border-sky-500 rounded-lg shadow-xl hover:shadow-sky-50/20 p-6">
         <h2 className="text-3xl font-serif bg-gradient-to-r rounded-2xl text-black from-cyan-300 to-amber-400 mb-4 text-center">
@@ -145,7 +151,7 @@ const handleSubmit = async (e) => {
           <h2 className="text-3xl font-bold text-white mb-4 text-center">
             Create New Problem
           </h2>
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className={`space-y-6 transform transition-all duration-1000 ease-out delay-300 ${animationComplete ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} onSubmit={handleSubmit}>
             <div className="space-y-2">
               <label className="block text-sm font-medium text-white">Title</label>
               <input

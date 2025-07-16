@@ -17,6 +17,7 @@ const Problem = () => {
   const [displayProblems, setDisplayProblems] = useState([]);
   const [searchString, setSearchString] = useState("");
   const [currentPage, setCurrentPage] = useState(1);  //for pagination
+  const [animationComplete, setAnimationComplete] = useState(false);
   const problemsPerPage = 6;
 
   useEffect(() => {
@@ -27,7 +28,6 @@ const Problem = () => {
         if (res.data.success) {
           setProblems(res.data.problems);
           setDisplayProblems(res.data.problems);
-          console.log(problems)
         }
 
         else {
@@ -42,6 +42,11 @@ const Problem = () => {
     }
 
     fetchProblems();
+
+  const timer = setTimeout(() => {
+      setAnimationComplete(true);
+    }, 300);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -122,6 +127,7 @@ const Problem = () => {
     }
   };
 
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <ToastContainer position="top-right" autoClose={5000} pauseOnHover />
@@ -138,7 +144,7 @@ const Problem = () => {
       ></div>
       <div className="container mx-auto px-4 py-8 relative z-10 ">
         {/* header and para centered here */}
-        <div className="flex-1 flex flex-col items-center md:items-center text-center">
+        <div className={`flex-1 flex flex-col items-center md:items-center text-center transform transition-all duration-1000 ease-out ${animationComplete ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-cyan-300 to-amber-400 bg-clip-text text-transparent ">
             Practice Problems
           </h1>
@@ -147,7 +153,7 @@ const Problem = () => {
           </p>
         </div>
       </div>
-      <div className="mb-6 relative max-w-xl mx-auto">
+      <div className={`mb-6 relative max-w-xl mx-auto transform transition-all duration-1000 ease-out delay-100 ${animationComplete ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
         <input
           type="text"
@@ -158,7 +164,7 @@ const Problem = () => {
         />
       </div>
 
-      <div className="flex flex-wrap justify-center gap-12 mb-6 relative mt-10">
+      <div className={`flex flex-wrap justify-center gap-12 mb-6 relative mt-10 transform transition-all duration-1000 ease-out delay-200 ${animationComplete ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
         {categories.map((category, index) => (
           <button key={index}
             onClick={() => setSelectedCategory(category)}
@@ -170,7 +176,7 @@ const Problem = () => {
             }>{category}</button>
         ))}
       </div>
-      <div className="flex flex-wrap justify-center gap-4 mb-8 relative mt-12">
+      <div className={`flex flex-wrap justify-center gap-4 mb-8 relative mt-12 transform transition-all duration-1000 ease-out delay-300 ${animationComplete ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
         <SelectDiff
           difficultyFilter={difficultyFilter}
           setDifficultyFilter={setDifficultyFilter}
@@ -180,7 +186,7 @@ const Problem = () => {
       <div className=" space-y-2 max-w-4xl mx-auto">
         {displayProblems.map((problem, index) => (
           <div key={problem._id}
-            className="bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl rounded-lg p-6 hover:shadow-cyan-100/20 hover:bg-white/10 transition-all duration-300 cursor-pointer"
+            className={`bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl rounded-lg p-6 hover:shadow-cyan-100/20 hover:bg-white/10  cursor-pointer transform transition-all duration-700 ease-out delay-${index * 100} ${animationComplete ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}
           >
             <div className="flex items-center justify-between">
               <div className="flex-1">
@@ -221,7 +227,7 @@ const Problem = () => {
       </div>
 
       {/* Buttons for Prev and Next*/}
-      <div className="flex justify-center items-center gap-4 mt-8 z-50 relative">
+      <div className={`flex justify-center items-center gap-4 mt-8 z-50 relative transform transition-all duration-1000 ease-out delay-400 ${animationComplete ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
         <div className="flex justify-between gap-2">
           <ArrowLeft color="white" className="mt-2.5 relative left-8 "/>
           <button className={`px-6 py-2 rounded-md text-white text-right ${currentPage === 1 ? "bg-gray-600 cursor-not-allowed" : "bg-cyan-600 hover:bg-cyan-700"}`}

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -12,8 +13,22 @@ const Register = () => {
   const [confPassword, setConfPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [animationComplete, setAnimationComplete] = useState(false);
+
+  const { loginUser, loading, isAuthenticated } = useAuth();
 
   const navigate = useNavigate();
+
+  useEffect(()=>{
+    if(!loading && isAuthenticated){
+       navigate("/dashboard", { replace: true });
+    }
+
+  const timer = setTimeout(() => {
+      setAnimationComplete(true);
+    }, 150);
+    return () => clearTimeout(timer);
+  },[isAuthenticated, loading, navigate]);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -66,7 +81,8 @@ const Register = () => {
       ></div>
       <ToastContainer position="top-right" autoClose={5000} pauseOnHover theme="light" />
       <div className="w-full max-w-md bg-white/5 backdrop-blur-md border border-white/10 rounded-xl shadow-2xl p-6 hover:shadow-cyan-100/90">
-        <h2 className="text-3xl font-bold text-white text-center mb-4">Create an Account</h2>
+      <div className={` mb-8 transform transition-all duration-1000 ease-out ${animationComplete ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-cyan-300 to-amber-400 bg-clip-text text-transparent text-center mb-4">Create an Account</h2>
         <p className="text-gray-400 text-center mb-6">Join <span className="text-xl p-0 text-cyan-400 hover:shadow-lg hover:shadow-blue-400">CodeJudge</span> and start solving problems!</p>
 
         <form onSubmit={handleRegister} className="space-y-4">
@@ -140,6 +156,7 @@ const Register = () => {
           Already have an account?{" "}
           <NavLink to="/login" className="text-cyan-400 hover:text-cyan-300">Sign In</NavLink>
         </div>
+      </div>
       </div>
     </div>
   );

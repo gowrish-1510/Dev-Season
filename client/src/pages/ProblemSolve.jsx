@@ -6,6 +6,7 @@ import { ToastContainer, toast, Bounce } from "react-toastify";
 import { ProblemContext } from "../context/ProblemContext.js";
 import { useAuth } from "../context/AuthContext.jsx";
 import { Play } from "lucide-react";
+import Loader from "../components/Loader.jsx";
 
 const ProblemSolve = () => {
 
@@ -71,6 +72,7 @@ const ProblemSolve = () => {
         }
 
       } catch (err) {
+        navigate("/problems");
         console.error("Error from server: ", err);
         setisLoading(false);
         toast.error("Server side Error loading problem!", {
@@ -188,8 +190,11 @@ const ProblemSolve = () => {
   }
   }
 
-  if (isloading)
-    return <div>Loading...</div>
+
+  if (!problem) {
+  return <Loader isLoading={true} message="Loading interface.." color="#8B5CF6" size={60} />;
+}
+
 
   return (
     <ProblemContext.Provider value={{ problem, testCases, code, setCode, isRunning,setIsRunning, clickRun, submit,language,setLanguage }}>

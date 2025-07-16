@@ -248,4 +248,19 @@ submission_router.post("/problem/:id/submit", UserAuthenticated, async (req, res
     }
 });
 
+//route for fetching submissions for a particular problem
+submission_router.get("/submission/:id",UserAuthenticated,async (req,res)=>{
+    try{
+    const submissions= await Submission.find({problem:req.params.id, user: req.user._id});
+    if (!submissions) {
+      return res.status(404).json({ success: false, message: "Submission not found" });
+    }
+
+    res.status(200).json({success:true,submissions});
+    }catch(err){
+      console.error("Error fetching submission code:", err);
+      res.status(500).json({ success: false, message: "Server error" });
+    }
+})
+
 export default submission_router;

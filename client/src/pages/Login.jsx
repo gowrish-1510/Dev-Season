@@ -1,20 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Code, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast, Bounce } from "react-toastify";
-import { NavLink } from "react-router-dom";
+import { NavLink} from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 
 const Login = () => {
-    
+  let navigate= useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [animationComplete, setAnimationComplete] = useState(false);
 
-  const { loginUser } = useAuth();
+  const { loginUser, loading, isAuthenticated } = useAuth();
 
-  let navigate= useNavigate();
+  useEffect(()=>{
+    if(!loading && isAuthenticated){
+       navigate("/dashboard", { replace: true });
+    }
+
+    toast.info("Please Login to continue",{
+      transition:Bounce,
+      theme:'dark'
+    })
+
+  const timer = setTimeout(() => {
+      setAnimationComplete(true);
+    }, 200);
+    return () => clearTimeout(timer);
+  },[isAuthenticated, loading, navigate]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -94,15 +110,19 @@ const Login = () => {
 
       <div className="relative z-10 w-full max-w-md">
         {/* Header with logo */}
+        <div className={`text-center mb-8 transform transition-all duration-1000 ease-out ${animationComplete ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-cyan-300 to-amber-400 bg-clip-text text-transparent">
-            Welcome Back
+            Welcome Back!
           </h1>
           <p className="text-gray-400">Sign in to your <span className="text-xl p-0 text-cyan-400 hover:shadow-lg hover:shadow-blue-400">CodeJudge</span> account</p>
         </div>
+        </div>
 
         {/* Login Card */}
-        <div className="bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl rounded-lg p-6 hover:shadow-cyan-100/90 ">
+        <div className=
+        {`bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl rounded-lg p-6 hover:shadow-cyan-100/90 transition-all duration-300 transform ${animationComplete ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}
+         >
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-white mb-2">Sign In</h2>
             <p className="text-gray-400 text-sm">

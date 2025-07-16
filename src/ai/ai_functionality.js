@@ -67,7 +67,7 @@ ai_router.post("/ai/hints", UserAuthenticated, async (req, res) => {
     });
 
     const optimizePrompt= new PromptTemplate({
-      template:`The code is correct for problem: {problem} in {language}. Suggest an optimized approach
+      template:`The code is correct for problem: {problem} in {language}. Suggest an optimized approach while explaining the current and efficient approach time and space complexity (in different lines)
       CODE: {code}
       {format_instructions}`,
 

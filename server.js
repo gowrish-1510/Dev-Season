@@ -6,6 +6,7 @@ import auth_router from './src/controllers/authController.js';
 import problem_router from './src/controllers/problemController.js';
 import submission_router from './src/controllers/submissionController.js';
 import user_router from './src/controllers/userController.js';
+import discussion_router from './src/controllers/discussionController.js';
 import ai_router from './src/ai/ai_functionality.js';
 import cors from 'cors'
 
@@ -38,6 +39,7 @@ app.use(problem_router);
 app.use(submission_router);
 app.use(user_router);
 app.use(ai_router);
+app.use(discussion_router);
 
 app.listen(8000,()=>{
     console.log("Server running on port 8000");
