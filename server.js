@@ -9,13 +9,16 @@ import user_router from './src/controllers/userController.js';
 import discussion_router from './src/controllers/discussionController.js';
 import ai_router from './src/ai/ai_functionality.js';
 import cors from 'cors'
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app= express();
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: process.env.CLIENT_URL || 'http://localhost:5173',
   credentials: true
 }));
 

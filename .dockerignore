@@ -2,3 +2,4 @@ compiler
 node_modules
 client
 .env
+keys
