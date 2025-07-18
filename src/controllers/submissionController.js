@@ -155,7 +155,7 @@ const numbers = lines[1].split(/\s+/).map(Number);   //validation for number of 
         }
 
    const op= await axios.post(`${process.env.COMPILER_BACKEND_URL}/run`,{
-    newcode,language,input
+    code: newcode,language,input
    });
 
    if(op.data.success){
