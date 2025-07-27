@@ -40,7 +40,7 @@ const cppExecute = (filepath, inputstringPath) => {
 
         if (execError || stderr) {
           if(execError.killed){  //if code ran for a long time(>5000 ms) due to infinite loop or any other reason
-            return reject({ error: "Execution timed out (possible infinite loop)", stderr: "" });
+            return reject({ error: "Time Limit Exceeded", stderr: "" });
           }  
           return reject({ error: execError, stderr });
         }

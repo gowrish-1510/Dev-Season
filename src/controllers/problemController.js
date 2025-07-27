@@ -209,6 +209,13 @@ problem_router.patch("/problem/approve/:id", AdminOnly, async (req, res) => {
    }
 });
 
+
+/*problem_router.put("/problem/edit/id",AdminOnly,async (req,res)=>{
+   try{
+      const {title, description, difficulty, category, testcases, maxExecTime, }= req.body;
+   }
+})*/
+
 //route to delete a problem
 problem_router.delete("/problem/delete/:id", AdminOnly, async (req, res) => {
    try {

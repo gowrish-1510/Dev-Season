@@ -26,6 +26,10 @@ const contestSchema = new mongoose.Schema({
         ref: 'Problem'
     }],
 
+    company: {
+    type: String
+    },
+
     participants: [{
         user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
         score: { type: Number, default: 0 },
@@ -44,5 +48,16 @@ const contestSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-const Contest = mongoose.model("Contest", contestSchema);
+// Virtual field for contest status (live, upcoming, ended)
+contestSchema.virtual('status').get(function () {
+    const now = new Date();
+    if (now < this.startTime) return 'upcoming';
+    if (now >= this.startTime && now <= this.endTime) return 'live';
+    return 'ended';
+});
+
+contestSchema.set('toJSON', { virtuals: true });
+contestSchema.set('toObject', { virtuals: true });
+
+const Contest= mongoose.model("Contest",contestSchema);
 export default Contest;

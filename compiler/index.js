@@ -1,4 +1,3 @@
-
 import express from 'express'
 import { createFile } from './generateFile.js';
 import cppExecute from './executeCpp.js';
@@ -9,6 +8,41 @@ const app= express();
 
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
+
+const formatCompilerError = (errorString) => {
+    if (!errorString || typeof errorString !== 'string') {
+        return "Unknown compilation error occurred";
+    }
+    // Replace UUID filenames with generic names
+    let cleanError = errorString.replace(/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\.cpp/g, 'main.cpp');
+    cleanError = cleanError.replace(/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\.py/g, 'main.py');
+    cleanError = cleanError.replace(/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\.(out|txt)/g, 'main.$1');
+    cleanError = cleanError.replace(/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/g, '[id]');
+    
+    // Removing full file paths
+    cleanError = cleanError.replace(/.*[\\\/]([^\\\/]+\.(cpp|py|out|txt))/g, '$1');
+    
+    // For C++ errors, extracting line number and error description
+    const cppErrorMatch = cleanError.match(/main\.cpp:(\d+):(\d+):\s*error:\s*(.+)/);
+    if (cppErrorMatch) {
+        const [, line, column, description] = cppErrorMatch;
+        return `SyntaxError: Line ${line}, Column ${column}: ${description.trim()}`;
+    }
+    
+    // For Python errors
+    const pythonErrorMatch = cleanError.match(/File "main\.py", line (\d+).*\n.*\n(.+Error.+)/);
+    if (pythonErrorMatch) {
+        const [, line, description] = pythonErrorMatch;
+        return `SyntaxError : Line ${line}: ${description.trim()}`;
+    }
+    
+    // Handle runtime errors
+    if (cleanError.includes('Command failed') || cleanError.includes('main.out') || cleanError.includes('main.txt')) {
+        return "ExecutionError: Failed to run the program. Please check for runtime issues (e.g., invalid input, segmentation faults, or unhandled exceptions).";
+    }
+    
+    return cleanError.trim();
+};
 
 app.post("/run",async (req,res)=>{
     const {code, language,input=""}= req.body;
@@ -39,11 +73,20 @@ app.post("/run",async (req,res)=>{
         res.json({success:true,output:{stdout: op.stdout, executionTime: op.estTime}})
     }
     catch(err){
-        console.error(err)
-        let cleanError= err.stderr || "Unknown error during execution!";
-        cleanError= cleanError.replace(/.*[\\\/]([a-zA-Z0-9_-]+\.cpp)/g, '$1');// to remove the filepath for c++ related errors
-        cleanError = cleanError.replace(/File ".*[\\\/]([a-zA-Z0-9_-]+\.py)"/g, 'File "$1"');// to remove the filepath for python related errors
-        res.json({success:false,error: cleanError});
+        console.error("Compilation/Execution Error:", err);
+        
+        // Clean up files even on error
+        try {
+            if (fs.existsSync(filepath)) fs.unlinkSync(filepath);
+            if (fs.existsSync(inputstringPath)) fs.unlinkSync(inputstringPath);
+        } catch (cleanupError) {
+            console.error("Cleanup error:", cleanupError);
+        }
+        
+        const rawError = err.stderr || err.error || "Unknown error during execution!";
+        const cleanError = formatCompilerError(rawError.toString());
+        
+        res.json({success: false, error: cleanError});
     }
 })
 

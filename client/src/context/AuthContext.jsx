@@ -49,7 +49,6 @@ export const AuthProvider = ({ children }) => {
     if (res.data.success) {
       setUser(res.data.user);
       setIsAuthenticated(true);
-      console.log("status of isAuthenticated in AuthContext: ",isAuthenticated);
       return { success: true, user: res.data.user };
     }
 

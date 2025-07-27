@@ -334,7 +334,7 @@ const Problem = () => {
         </div>
 
         <span className="text-amber-700 font-medium">
-          Page {currentPage} of {returnTotalPages()}
+          Page {returnTotalPages()==0? 0:currentPage} of {returnTotalPages()}
         </span>
 
         <div className="flex justify-between gap-2">

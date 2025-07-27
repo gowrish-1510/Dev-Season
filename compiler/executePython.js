@@ -20,7 +20,7 @@ const pythonExecute = (filepath, inputstringPath) => {
       if (execError || stderr) {
         if (execError && execError.killed) {
           // Code took too long to execute 
-          return reject({ error: "Execution timed out (possible infinite loop)", stderr: "" });
+          return reject({ error: "Time Limit Exceeded!", stderr: "" });
         }
         return reject({ error: execError, stderr });
       }

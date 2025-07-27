@@ -53,7 +53,6 @@ const ProblemSolve = () => {
         const result = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/problem/${id}`);
 
         if (result.data.success) {
-          console.log("Problems recieved successfully: ", result.data.problem);
           setProblem(result.data.problem);
           setTestCases(result.data.sampleTestCases);
           setisLoading(false);
